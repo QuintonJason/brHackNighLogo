@@ -1,0 +1,46 @@
+@keyframes rain {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(250%);
+  }
+}
+.rain {
+  animation: rain 1s linear infinite;
+}
+
+@keyframes spark {
+  0% {
+    opacity: 0;
+  }
+  14% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  22% {
+    opacity: 0;
+  }
+  74% {
+    opacity: 0;
+  }
+  65% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.spark {
+  animation: spark 2s linear infinite;
+}
