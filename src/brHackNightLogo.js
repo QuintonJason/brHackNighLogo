@@ -101,7 +101,8 @@ export default class LogoDiv extends Component {
     super(props);
     this.state = {
       mobileNavOpen: false,
-      weatherLocation: "70816"
+      weatherLocation: "70816",
+      weatherInfo: false
     };
     this.toggleMobileNav = this.toggleMobileNav.bind(this);
     this.closeMobileNav = this.closeMobileNav.bind(this);
@@ -133,14 +134,43 @@ export default class LogoDiv extends Component {
       adapter: jsonpAdapter
     }).then(res => {
       let body = res.data.response;
-      console.log("body", body);
       this.setState({ weatherInfo: body });
     });
   }
+  showWeather = e => {
+    // alert(
+    //   `Current temperature in ${location} is: ${temp_f}. Estimate forecast ${weather}.`
+    // );
+  };
   render() {
     const menuClass = this.state.mobileNavOpen ? "active" : "";
     const myWeather = this.state.weatherInfo;
-    // console.log(myWeather.ob);
+    const { icon, temp_f, weather } = this.state.weatherInfo
+      ? this.state.weatherInfo.ob
+      : false;
+    const { location } = this.state.weatherInfo
+      ? this.state.weatherInfo.place
+      : false;
+    console.log("icon", icon);
+
+    const clear = this.state.weatherInfo
+      ? this.state.weatherInfo.ob.icon.includes("clear") ||
+        this.state.weatherInfo.ob.icon.includes("sunny")
+      : false;
+    const cloudy = this.state.weatherInfo
+      ? this.state.weatherInfo.ob.icon.includes("cloudy")
+      : false;
+    const rain = this.state.weatherInfo
+      ? this.state.weatherInfo.ob.icon.includes("rain")
+      : false;
+    const tstorm = this.state.weatherInfo
+      ? this.state.weatherInfo.ob.icon.includes("tstorm")
+      : false;
+    const unknown = this.state.weatherInfo
+      ? this.state.weatherInfo.ob.icon.includes("unknown")
+      : false;
+
+    console.log("icon", icon);
 
     return (
       <svg
