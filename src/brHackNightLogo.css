@@ -1,3 +1,6 @@
+svg {
+  max-width: 500px;
+}
 @keyframes rain {
   0% {
     transform: translateY(0);
@@ -43,4 +46,33 @@
 }
 .spark {
   animation: spark 2s linear infinite;
+}
+.st2 {
+  fill: #ffffff;
+  stroke: #414042;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-miterlimit: 10;
+}
+#cloud.dark {
+  fill: #333;
+}
+.rain {
+  opacity: 0;
+}
+.rain-1 {
+  animation-delay: 0.65s;
+}
+.rain-2 {
+  animation-delay: 0.8s;
+}
+.rain-3 {
+  animation-delay: 0.5s;
+}
+.rain-4 {
+  animation-delay: 0.29s;
+}
+.rain-5 {
+  animation-delay: 1.17s;
 }

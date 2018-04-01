@@ -2,7 +2,12 @@ import * as PropTypes from "prop-types";
 import React, { Component } from "react";
 // import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import styled, { keyframes } from "styled-components";
-import "./brHackNightLogo.css"
+
+import "./brHackNightLogo.css";
+import * as keys from "./keys.json";
+const fetchJsonp = require("fetch-jsonp");
+let axios = require("axios");
+let jsonpAdapter = require("axios-jsonp");
 
 const HackNightLogo = ({ className, children }) => (
   <div className={className}>{children}</div>
@@ -27,12 +32,12 @@ const ST1 = {
   fill: "#414042"
 };
 const ST2 = {
-  fill: "#FFFFFF",
-  stroke: "#414042",
-  strokeWidth: "5",
-  strokeLinecap: "round",
-  strokeLinejoin: "round",
-  strokeMiterlimet: "10"
+  // fill: "#FFFFFF",
+  // stroke: "#414042",
+  // strokeWidth: "5",
+  // strokeLinecap: "round",
+  // strokeLinejoin: "round",
+  // strokeMiterlimet: "10"
 };
 const ST3 = {
   fill: "#FCC310",
@@ -95,7 +100,8 @@ export default class LogoDiv extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mobileNavOpen: false
+      mobileNavOpen: false,
+      weatherLocation: "70816"
     };
     this.toggleMobileNav = this.toggleMobileNav.bind(this);
     this.closeMobileNav = this.closeMobileNav.bind(this);
@@ -107,11 +113,34 @@ export default class LogoDiv extends Component {
   };
   closeMobileNav = e => {
     this.setState({
-      mobileNavOpen: false
+      mobileNavOpen: false,
+      weatherInfo: []
     });
   };
+  componentDidMount() {
+    console.log("keys", keys);
+    const suffix =
+      "?client_id=" +
+      keys.client_id +
+      "&client_secret=" +
+      keys.clientSecret +
+      "";
+    const gapiKey = keys.gapiKey;
+    axios({
+      url: `http://api.aerisapi.com/observations/${
+        this.state.weatherLocation
+      }${suffix}`,
+      adapter: jsonpAdapter
+    }).then(res => {
+      let body = res.data.response;
+      console.log("body", body);
+      this.setState({ weatherInfo: body });
+    });
+  }
   render() {
     const menuClass = this.state.mobileNavOpen ? "active" : "";
+    const myWeather = this.state.weatherInfo;
+    // console.log(myWeather.ob);
 
     return (
       <svg
@@ -194,7 +223,7 @@ export default class LogoDiv extends Component {
           <g id="mark">
             <path
               id="cloud"
-              className="st2 "
+              className="st2 dark"
               style={ST2}
               d="M176.6,40.7h-7.2c0-9.4-7.6-17.1-17.1-17.1l0,0c-9.4,0-17.1,7.6-17.1,17.1l0,0c0,0.1,0,0.2,0,0.4
                       c-8.9,1.8-15.6,9.6-15.6,19l0,0c0,10.7,8.7,19.4,19.4,19.4h37.6c10.7,0,19.4-8.7,19.4-19.4l0,0C195.9,49.4,187.3,40.7,176.6,40.7z
@@ -235,7 +264,7 @@ export default class LogoDiv extends Component {
               d="M148.3,79.5l-2.1,2.1c-1.2,1.2-1.2,3.1,0,4.2c1.2,1.2,3.1,1.2,4.2,0c1.2-1.2,1.2-3.1,0-4.2
                       L148.3,79.5z"
             />
-						<Drop className="" />
+            <Drop className="" />
             <path
               id="Drop_2_"
               className="st4 hide rain rain-4"
@@ -272,9 +301,6 @@ export default class LogoDiv extends Component {
 
   componentWillMount() {
     // fires immediately before the initial render
-  }
-  componentDidMount() {
-    // fires immediately after the initial render
   }
   componentWillReceiveProps() {
     // fires when component is receiving new props
