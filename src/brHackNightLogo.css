@@ -45,7 +45,11 @@ svg {
   }
 }
 .spark {
+  display: none;
   animation: spark 2s linear infinite;
+}
+.spark.lightening {
+  display: block;
 }
 .st2 {
   fill: #ffffff;
@@ -55,10 +59,16 @@ svg {
   stroke-linejoin: round;
   stroke-miterlimit: 10;
 }
-#cloud.dark {
+#cloud.dark,
+#cloud.raining,
+#cloud.lightening {
   fill: #333;
 }
 .rain {
+  display: none;
+}
+.raining {
+  display: block;
   opacity: 0;
 }
 .rain-1 {

@@ -8,6 +8,7 @@ import * as keys from "./keys.json";
 const fetchJsonp = require("fetch-jsonp");
 let axios = require("axios");
 let jsonpAdapter = require("axios-jsonp");
+var classNames = require("classnames");
 
 const HackNightLogo = ({ className, children }) => (
   <div className={className}>{children}</div>
@@ -102,24 +103,13 @@ export default class LogoDiv extends Component {
     this.state = {
       mobileNavOpen: false,
       weatherLocation: "70816",
-      weatherInfo: false
+      weatherInfo: false,
+      cloudy: false,
+      raining: false,
+      lightening: false
     };
-    this.toggleMobileNav = this.toggleMobileNav.bind(this);
-    this.closeMobileNav = this.closeMobileNav.bind(this);
   }
-  toggleMobileNav = e => {
-    this.setState({
-      mobileNavOpen: !this.state.mobileNavOpen
-    });
-  };
-  closeMobileNav = e => {
-    this.setState({
-      mobileNavOpen: false,
-      weatherInfo: []
-    });
-  };
   componentDidMount() {
-    console.log("keys", keys);
     const suffix =
       "?client_id=" +
       keys.client_id +
@@ -137,50 +127,43 @@ export default class LogoDiv extends Component {
       this.setState({ weatherInfo: body });
     });
   }
-  showWeather = e => {
-    // alert(
-    //   `Current temperature in ${location} is: ${temp_f}. Estimate forecast ${weather}.`
-    // );
+  showWeather = (loc, temp, wthr, e) => {
+    alert(
+      `Current temperature in ${loc} is: ${temp}. Estimate forecast ${wthr}.`
+    );
   };
   render() {
     const menuClass = this.state.mobileNavOpen ? "active" : "";
     const myWeather = this.state.weatherInfo;
-    const { icon, temp_f, weather } = this.state.weatherInfo
+    const { icon, tempF, weather } = this.state.weatherInfo
       ? this.state.weatherInfo.ob
       : false;
-    const { location } = this.state.weatherInfo
+    const { name } = this.state.weatherInfo
       ? this.state.weatherInfo.place
       : false;
-    console.log("icon", icon);
 
-    const clear = this.state.weatherInfo
-      ? this.state.weatherInfo.ob.icon.includes("clear") ||
-        this.state.weatherInfo.ob.icon.includes("sunny")
-      : false;
-    const cloudy = this.state.weatherInfo
-      ? this.state.weatherInfo.ob.icon.includes("cloudy")
-      : false;
-    const rain = this.state.weatherInfo
-      ? this.state.weatherInfo.ob.icon.includes("rain")
-      : false;
-    const tstorm = this.state.weatherInfo
-      ? this.state.weatherInfo.ob.icon.includes("tstorm")
-      : false;
-    const unknown = this.state.weatherInfo
-      ? this.state.weatherInfo.ob.icon.includes("unknown")
-      : false;
-
-    console.log("icon", icon);
+    const cloudyClass =
+      this.state.weatherInfo &&
+      this.state.weatherInfo.ob.icon.includes("cloudy")
+        ? "dark"
+        : "";
+    const rainClass =
+      this.state.weatherInfo && this.state.weatherInfo.ob.icon.includes("rain")
+        ? "raining"
+        : "";
+    const tstormClass =
+      this.state.weatherInfo &&
+      this.state.weatherInfo.ob.icon.includes("tstorm")
+        ? "lightening"
+        : "";
+    const unknown =
+      this.state.weatherInfo &&
+      this.state.weatherInfo.ob.icon.includes("unknown")
+        ? "unknown"
+        : "";
 
     return (
-      <svg
-        version="1.1"
-        id="Layer_1"
-        xmlns="http://www.w3.org/2000/svg"
-        x="0px"
-        y="0px"
-        viewBox="0 0 327.6 160.9"
-      >
+      <svg id="Layer_1" viewBox="0 0 327.6 160.9">
         <g>
           <g id="text-wrapper">
             <g id="text">
@@ -253,7 +236,7 @@ export default class LogoDiv extends Component {
           <g id="mark">
             <path
               id="cloud"
-              className="st2 dark"
+              className={`st2 ${cloudyClass} ${rainClass}`}
               style={ST2}
               d="M176.6,40.7h-7.2c0-9.4-7.6-17.1-17.1-17.1l0,0c-9.4,0-17.1,7.6-17.1,17.1l0,0c0,0.1,0,0.2,0,0.4
                       c-8.9,1.8-15.6,9.6-15.6,19l0,0c0,10.7,8.7,19.4,19.4,19.4h37.6c10.7,0,19.4-8.7,19.4-19.4l0,0C195.9,49.4,187.3,40.7,176.6,40.7z
@@ -280,7 +263,7 @@ export default class LogoDiv extends Component {
             />
             <path
               id="Spark_1_"
-              className="st0 hide spark spark-1"
+              className={`st0 hide spark spark-1 ${tstormClass}`}
               style={ST0}
               d="M166.5,89.2c0.2,0.2,0.2,0.5,0.1,0.7l-8.4,18.1c-0.1,0.2-0.4,0.4-0.7,0.4c-0.1,0-0.1,0-0.2,0
                       c-0.3-0.1-0.5-0.4-0.5-0.8l3.1-12.6l-6.3,1.6c-0.1,0-0.1,0-0.2,0c-0.2,0-0.4-0.1-0.5-0.2c-0.2-0.2-0.2-0.4-0.2-0.6l3.1-12.9
@@ -289,36 +272,36 @@ export default class LogoDiv extends Component {
             />
             <path
               id="Drop_3_"
-              className="st4 hide rain rain-5"
-              style={ST5}
+              className={`st4 hide rain rain-5 ${rainClass}`}
+              style={ST4}
               d="M148.3,79.5l-2.1,2.1c-1.2,1.2-1.2,3.1,0,4.2c1.2,1.2,3.1,1.2,4.2,0c1.2-1.2,1.2-3.1,0-4.2
                       L148.3,79.5z"
             />
             <Drop className="" />
             <path
               id="Drop_2_"
-              className="st4 hide rain rain-4"
+              className={`st4 hide rain rain-4 ${rainClass}`}
               style={ST4}
               d="M158.9,77.4l-2.1,2.1c-1.2,1.2-1.2,3.1,0,4.2c1.2,1.2,3.1,1.2,4.2,0c1.2-1.2,1.2-3.1,0-4.2
                       L158.9,77.4z"
             />
             <path
               id="Drop_4_"
-              className="st4 hide rain rain-3"
+              className={`st4 hide rain rain-3 ${rainClass}`}
               style={ST4}
               d="M141.3,79.5l-2.1,2.1c-1.2,1.2-1.2,3.1,0,4.2c1.2,1.2,3.1,1.2,4.2,0c1.2-1.2,1.2-3.1,0-4.2
                       L141.3,79.5z"
             />
             <path
               id="Drop"
-              className="st4 hide rain rain-2"
+              className={`st4 hide rain rain-2 ${rainClass}`}
               style={ST4}
               d="M174.4,78.3l-2.1,2.1c-1.2,1.2-1.2,3.1,0,4.2c1.2,1.2,3.1,1.2,4.2,0c1.2-1.2,1.2-3.1,0-4.2
                       L174.4,78.3z"
             />
             <path
               id="Drop_1_"
-              className="st4 hide rain rain-1"
+              className={`st4 hide rain rain-1 ${rainClass}`}
               style={ST4}
               d="M165,81.9l-2.1,2.1c-1.2,1.2-1.2,3.1,0,4.2c1.2,1.2,3.1,1.2,4.2,0c1.2-1.2,1.2-3.1,0-4.2
                       L165,81.9z"
